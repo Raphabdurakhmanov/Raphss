@@ -494,14 +494,21 @@ class Canvas:
         self.trail.fill((0, 0, 0))
 
     def draw(self, t):
+        t0 = time.perf_counter()
         char, lum, tag, info, count = frame(t, COLS, ROWS, ASPECT)
+        t1 = time.perf_counter()
         mask = self.atlas[char.T].transpose(0, 3, 1, 2).reshape(COLS * CW, ROWS * CH)
         surfarray.blit_array(self.shape, np.repeat(mask[..., None], 3, 2))
+        t2 = time.perf_counter()
         col = (COLORS[np.clip(tag, 0, len(COLORS) - 1)] * np.clip(lum, 0, 1)[..., None] * 255).astype(np.uint8)
         tint = pygame.transform.scale(surfarray.make_surface(col.transpose(1, 0, 2)), self.shape.get_size())
         self.shape.blit(tint, (0, 0), special_flags=pygame.BLEND_MULT)
+        t3 = time.perf_counter()
         self.trail.fill(self.fade, special_flags=pygame.BLEND_MULT)     # previous frame fades
         self.trail.blit(self.shape, (0, 0), special_flags=pygame.BLEND_MAX)
+        t4 = time.perf_counter()
+        for k, v in (("frame", t1 - t0), ("mask", t2 - t1), ("tint", t3 - t2), ("trail", t4 - t3)):
+            PROF[k] = PROF.get(k, 0) + v
         return self.trail, info, count
 
 
@@ -521,6 +528,9 @@ def glow_layer(surf, amount):
 def window_size():
     # в браузере страница сама масштабирует холст
     return W, H
+
+
+PROF = {}
 
 
 async def main():
@@ -552,10 +562,16 @@ async def main():
                 t = 0.0
                 canvas.reset()
             art, info, count = canvas.draw(t)
+        g0 = time.perf_counter()
         screen.fill((0, 0, 0))
         screen.blit(art, (0, 0))
         screen.blit(glow_layer(blur(art, 4, 5), 0.75), (0, 0), special_flags=pygame.BLEND_ADD)
         screen.blit(glow_layer(blur(art, 8, 22), 0.45), (0, 0), special_flags=pygame.BLEND_ADD)
+        PROF["glow"] = PROF.get("glow", 0) + time.perf_counter() - g0
+        PROF["n"] = PROF.get("n", 0) + 1
+        if PROF["n"] == 30:
+            print("PROF ms/frame", {k: round(v / 30 * 1000, 1) for k, v in PROF.items() if k != "n"})
+            PROF.clear()
         y = H - 70
         screen.blit(small.render(SIGN, True, (120, 112, 128)), (64, y - 26))
         screen.blit(small.render(hud(info), True, DIM), (64, y))
