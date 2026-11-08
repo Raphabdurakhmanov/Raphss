@@ -61,3 +61,19 @@ for app, title in APPS.items():
         for f in FONTS + EXTRA.get(app, []):
             z.write(f, f"assets/{f.name}")
     print(app, "->", out.relative_to(ROOT), round((out / f"{app}.apk").stat().st_size / 1024), "KB")
+
+
+# галерея на главной (для проекта, который смотрит на весь репозиторий)
+import shutil
+gallery = ROOT / "deploy"
+shutil.copy(ROOT / "web" / "index.html", gallery / "index.html")
+(gallery / "thumbs").mkdir(exist_ok=True)
+for app, src in {
+    "cat-knight": "CAT-KNIGHT/images/03_knight.png",
+    "money-rain": "MONEY-RAIN/images/02_rain.png",
+    "birthday-cake": "BIRTHDAY-CAKE/images/03_happy_birthday.png",
+    "rose": "ROSE/images/03_bloom.png",
+    "diamond-ring": "DIAMOND-RING/images/02_finished.png",
+}.items():
+    shutil.copy(ROOT / src, gallery / "thumbs" / f"{app}.png")
+print("gallery -> deploy/index.html")
