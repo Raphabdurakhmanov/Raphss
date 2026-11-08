@@ -29,6 +29,9 @@ Every work also runs on the web (GitHub Pages, built with [pygbag](https://pypi.
 - IN BLOOM: https://raphabdurakhmanov.github.io/Raphss/rose/
 - WILL YOU: https://raphabdurakhmanov.github.io/Raphss/diamond-ring/
 
+Ready-to-host folders (Vercel, Netlify, any static hosting) are in `deploy/<name>/`.
+Rebuild them after changing the code: `python scripts/build_static.py`.
+
 Browser versions live in `web/<name>/main.py` (same code, with an async main loop and bundled DejaVu fonts).
 
 ## Technology
