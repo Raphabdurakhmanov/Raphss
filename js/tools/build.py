@@ -19,17 +19,13 @@ APPS = {
     "diamond-ring": "WILL YOU · Raph",
 }
 
-VERCEL_JSON = """{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "echo no install",
-  "buildCommand": "echo static site",
-  "outputDirectory": "."
-}
-"""
+# один и тот же vercel.json и в корне, и в каждой папке:
+# Vercel всегда ищет папку deploy — если её нет (Root Directory = deploy/<работа>), копируем туда текущую папку
+VERCEL_JSON = (ROOT / "vercel.json").read_text(encoding="utf-8")
 
 # галерея со ссылками на все работы
 shutil.copy(JS / "gallery.html", DEPLOY / "index.html")
+(DEPLOY / "vercel.json").write_text(VERCEL_JSON, encoding="utf-8")
 
 template = (JS / "index.tmpl.html").read_text(encoding="utf-8")
 
