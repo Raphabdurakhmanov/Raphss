@@ -1,0 +1,41 @@
+HOW IT WORKS - Cat Knight
+Raph
+
+The kitten knight was drawn in letters from a photo that isn't mine,
+so the photo is not included. Here is how the 600 frames were made,
+and what cat_knight.py does with them.
+
+How the frames were made
+1. Cut out
+   The knight was cut out of the photo and split into three layers:
+   the knight, the cape, and a patch of grass under the feet.
+
+2. The cape
+   A 9 x 9 grid of points was laid over the cape and joined by springs.
+   The points by the shoulder are pinned. Wind with gusts pushes the
+   rest, ripples run from the shoulder to the hem, and the springs keep
+   the cloth together.
+
+3. Wind on the fur and the grass
+   The fur on the edge of the head and the grass shift a few pixels with
+   the same wind. The grass is brightest under the feet and darker
+   toward its edge, like a spotlight.
+
+4. From pixels to letters
+   A camera starts on the face and slowly pulls back to the whole
+   knight. Each frame was cut into a grid of 154 x 87 letter cells:
+   - brightness picks the letter, from 1il!;: (dark) to 08B$#&%Q (bright),
+   - the edge of the knight and strong lines inside it become | / \ - _,
+   - the colour comes from the photo, the eyes stay dark.
+   A light runs up the sword three times and the tip flashes.
+
+What cat_knight.py does
+5. Plays the frames
+   For each frame it reads which letter, colour and brightness each cell
+   has, draws the letters, lets the last frame fade behind it and adds
+   a soft glow.
+
+Things you can try (for yourself)
+   CW, CH, FONT_PX   letter size
+   TRAIL             how long the last frame stays behind
+   COLORS            change the colours of the whole piece

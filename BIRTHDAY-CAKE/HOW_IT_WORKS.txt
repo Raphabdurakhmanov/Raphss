@@ -1,0 +1,48 @@
+HOW IT WORKS - Birthday Cake
+Raph
+
+The whole artwork is one Python file. It works in six steps.
+
+1. The cake
+   A slice of a round cake is built from thousands of points in 3D space:
+   two cut faces with two sponge layers and a band of cream between them,
+   a frosted outer side, a frosted top with a piped ridge and a swirl,
+   a twisted candle, sprinkles, and a plate with a scalloped gold rim.
+   Each point also knows which way its surface faces (its "normal"),
+   so it can be lit.
+
+2. How it appears
+   Every point gets a number for "when it is drawn", mostly by height,
+   so the cake builds from the plate up. A few points fly in from
+   further away before they settle.
+
+3. Light
+   - A key light from above gives the basic shading.
+   - When the candle is lit, a second, warm light sits just above the
+     flame. It fades quickly with distance, so only the part of the cake
+     near the candle brightens, and it flickers with the flame.
+   - The flame itself is a teardrop of points that sways and flickers,
+     with a bright core and a soft halo around it.
+
+4. From points to letters
+   The screen is a grid of letter cells. For each cell:
+   - the nearest point wins,
+   - edges become  | / \ - _  following the outline,
+   - the inside gets letters that suit the material:
+     o 0 a e for the sponge, ~ for cream and frosting, = for the crust.
+
+5. Confetti and the words
+   - Confetti pieces fall and spin, drawn as  - / | \  in bright colours.
+   - HAPPY and BIRTHDAY are drawn as big letters, then filled with
+     small code letters. They pop in, settle, and catch a twinkle now
+     and then.
+
+6. The window
+   Each cell is drawn as a small glyph in its colour, a soft glow is added,
+   and the picture updates up to 30 times a second.
+
+Things you can try (for yourself)
+   BUILD     how long the cake takes to appear
+   flicker() how much the flame moves
+   COLORS    the colour of each kind of point
+   W, H      window size

@@ -1,0 +1,46 @@
+HOW IT WORKS - Rose
+Raph
+
+The whole artwork is one Python file. It works in six steps.
+
+1. The plant
+   The stem, two leaves and five sepals are built from thousands of
+   points in 3D space. Each point also knows which way its surface faces
+   (its "normal"), so it can be lit.
+
+2. The flower
+   The petals are one spiral surface that curls inward like a real rose.
+   At the start it is blended into a closed, egg-shaped bud; as the
+   bloom value rises from 0 to 1 the bud loosens, the outer petals lean
+   away first and the heart stays tight.
+
+3. How it appears
+   Every point gets a number for "when it is drawn": the stem from the
+   ground up, then the leaves, the sepals, and the bud from its base to
+   its tip. A bright point of light travels up the stem, throwing sparks.
+
+4. Light and motion
+   - A key light from above and a rim light that slowly circles the rose.
+   - Brightness = how much a surface faces the light plus a sharp highlight;
+     the heart of the flower is a little darker, for depth.
+   - The rose sways a little; the lower outer petals trail behind the sway.
+   - Dewdrops sparkle on the petals, and a few of them swell, fall with
+     gravity and splash on the floor.
+   - Twinkling dust drifts around the flower.
+
+5. From points to letters
+   The screen is a grid of letter cells. For each cell:
+   - the nearest point wins,
+   - edges become  | / \ - _  following the outline,
+   - the inside becomes letters chosen by brightness (dim: 1 i l ; bright: 8 B $ #),
+   - bright highlights become  *  and the brightest throw four-pointed rays.
+
+6. The window
+   Each cell is drawn as a small glyph in its colour, a soft glow is added,
+   and the picture updates up to 30 times a second.
+
+Things you can try (for yourself)
+   bloom()   how fast the bud opens
+   DRAW      when the plant starts and finishes appearing
+   COLORS    the colour of each kind of point
+   W, H      window size

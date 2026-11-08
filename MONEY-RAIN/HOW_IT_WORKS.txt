@@ -1,0 +1,33 @@
+HOW IT WORKS - Money Rain
+Raph
+
+The whole artwork is one Python file. It works in four steps.
+
+1. One note
+   A hundred-dollar note is a grid of points. Each point knows what is
+   printed on it: border, frame lines, the portrait oval and face, the
+   seal and the 100 in each corner.
+
+2. Falling
+   Sixteen notes start one after another. Each has its own place, depth,
+   speed and wobble: it sways from side to side, tumbles and turns, and a
+   soft S-curve rolls along the paper. When a note leaves the bottom of
+   the frame it comes back in at the top, so it keeps raining.
+
+3. From points to letters
+   The screen is a grid of letter cells. For each cell:
+   - the nearest point wins,
+   - edges become  | / \ - _  following the outline,
+   - the inside gets letters for what is printed there:
+     # for the border, $ for the seal, 100 in the corners, ~ - for the paper.
+   Notes further away are drawn dimmer.
+
+4. The window
+   Each cell is drawn as a small glyph in its colour, a soft glow is added,
+   and the picture updates up to 30 times a second.
+
+Things you can try (for yourself)
+   BILLS      how many notes, where they fall, how fast
+   TOP, FALL  where notes enter and how far they fall
+   COLORS     the colour of each printed part
+   W, H       window size

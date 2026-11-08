@@ -1,0 +1,67 @@
+name: Deploy to GitHub Pages
+
+# Каждая работа собирается под браузер через pygbag (Python -> WebAssembly)
+# и выкладывается в отдельную папку: /rose/, /cat-knight/ и т.д.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pygbag
+        run: pip install pygbag==0.9.2
+
+      - name: Build all works
+        run: |
+          set -e
+          mkdir -p site/thumbs
+          for app in cat-knight money-rain birthday-cake rose diamond-ring; do
+            echo "=== $app"
+            mkdir -p build/$app
+            cp web/$app/main.py web/fonts/*.ttf build/$app/
+            if [ "$app" = "cat-knight" ]; then cp CAT-KNIGHT/cat_knight_frames.npz build/$app/; fi
+            python -m pygbag --build --ume_block 0 build/$app
+            mkdir -p site/$app
+            cp -r build/$app/build/web/. site/$app/
+          done
+          cp CAT-KNIGHT/images/03_knight.png site/thumbs/cat-knight.png
+          cp MONEY-RAIN/images/02_rain.png site/thumbs/money-rain.png
+          cp BIRTHDAY-CAKE/images/03_happy_birthday.png site/thumbs/birthday-cake.png
+          cp ROSE/images/03_bloom.png site/thumbs/rose.png
+          cp DIAMOND-RING/images/02_finished.png site/thumbs/diamond-ring.png
+          cp web/index.html site/index.html
+          touch site/.nojekyll
+          ls -R site | head -50
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
