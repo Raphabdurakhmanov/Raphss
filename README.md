@@ -20,7 +20,7 @@ More works will be added over time, including small standalone pieces released a
 
 ## Live in the browser
 
-Every work also runs on the web (GitHub Pages, built with [pygbag](https://pypi.org/project/pygbag/)):
+Every work also runs on the web. The browser versions are rewritten in plain JavaScript (canvas), so they start instantly and run at full speed:
 
 - Gallery: https://raphabdurakhmanov.github.io/Raphss/
 - CAT KNIGHT: https://raphabdurakhmanov.github.io/Raphss/cat-knight/
@@ -30,13 +30,15 @@ Every work also runs on the web (GitHub Pages, built with [pygbag](https://pypi.
 - WILL YOU: https://raphabdurakhmanov.github.io/Raphss/diamond-ring/
 
 Ready-to-host folders (Vercel, Netlify, any static hosting) are in `deploy/<name>/`.
-Rebuild them after changing the code: `python scripts/build_static.py`.
+Rebuild them after changing the code: `python js/tools/build.py`.
 
-Browser versions live in `web/<name>/main.py` (same code, with an async main loop and bundled DejaVu fonts).
+The JavaScript versions live in `js/<name>/app.js` with a shared renderer in `js/engine.js`.
+Data that is the same every run (random seeds, cake points, Cat Knight frames) is exported from the Python
+originals by `js/tools/export_*.py`, and `js/tools/compare.mjs` checks the JS frames against Python.
 
 ## Technology
 
-Python · NumPy · pygame-ce · Pillow. Written from scratch, no 3D software or image assets.
+Python · NumPy · pygame-ce · Pillow, and JavaScript for the web versions. Written from scratch, no 3D software or image assets.
 
 ---
 
