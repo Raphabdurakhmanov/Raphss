@@ -18,6 +18,25 @@ from pathlib import Path
 import numpy as np
 import pygame
 
+
+class surfarray:
+    # В браузере (pygbag) pygame загружается раньше numpy, и pygame.surfarray
+    # там не работает. Делаем те же три функции через байты картинки.
+    @staticmethod
+    def array3d(surf):
+        w, h = surf.get_size()
+        return np.frombuffer(pygame.image.tobytes(surf, "RGB"), np.uint8).reshape(h, w, 3).transpose(1, 0, 2)
+
+    @staticmethod
+    def make_surface(arr):
+        w, h = arr.shape[0], arr.shape[1]
+        data = np.ascontiguousarray(arr.transpose(1, 0, 2), dtype=np.uint8).tobytes()
+        return pygame.image.frombytes(data, (w, h), "RGB")
+
+    @staticmethod
+    def blit_array(surf, arr):
+        surf.blit(surfarray.make_surface(arr), (0, 0))
+
 TITLE = "Cat Knight - Raph"
 SIGN = "Raph · 2026"
 FPS = 30
@@ -50,7 +69,7 @@ def glyphs():
         s = pygame.Surface((CW, CH))
         g = font.render(ch, True, (255, 255, 255))
         s.blit(g, ((CW - g.get_width()) // 2, (CH - g.get_height()) // 2))
-        atlas.append(pygame.surfarray.array3d(s)[:, :, 0].T.astype(np.float32) / 255)
+        atlas.append(surfarray.array3d(s)[:, :, 0].T.astype(np.float32) / 255)
     return np.stack(atlas)
 
 
@@ -67,9 +86,9 @@ class Canvas:
     def draw(self, i):
         # letters in white, then tinted with their colour and brightness
         mask = self.atlas[LETTERS[i].T].transpose(0, 3, 1, 2).reshape(COLS * CW, ROWS * CH)
-        pygame.surfarray.blit_array(self.shape, np.repeat(mask[..., None], 3, 2))
+        surfarray.blit_array(self.shape, np.repeat(mask[..., None], 3, 2))
         col = (COLORS[np.clip(TONE[i], 0, len(COLORS) - 1)] * np.clip(LIGHT[i], 0, 1)[..., None] * 255).astype(np.uint8)
-        tint = pygame.transform.scale(pygame.surfarray.make_surface(col.transpose(1, 0, 2)), self.shape.get_size())
+        tint = pygame.transform.scale(surfarray.make_surface(col.transpose(1, 0, 2)), self.shape.get_size())
         self.shape.blit(tint, (0, 0), special_flags=pygame.BLEND_MULT)
         self.trail.fill(self.fade, special_flags=pygame.BLEND_MULT)     # previous frame fades
         self.trail.blit(self.shape, (0, 0), special_flags=pygame.BLEND_MAX)
