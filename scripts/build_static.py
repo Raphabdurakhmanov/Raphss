@@ -19,6 +19,14 @@ APPS = {
     "diamond-ring": "WILL YOU · Raph",
 }
 EXTRA = {"cat-knight": [ROOT / "CAT-KNIGHT" / "cat_knight_frames.npz"]}
+VERCEL_JSON = """{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo no install",
+  "buildCommand": "echo static site",
+  "outputDirectory": "."
+}
+"""
 FONTS = sorted((ROOT / "web" / "fonts").glob("*.ttf"))
 
 
@@ -46,6 +54,8 @@ for app, title in APPS.items():
     html = TEMPLATE.replace("{APP}", app).replace("{TITLE}", title)
     (out / "index.html").write_text(html, encoding="utf-8")
     (out / "favicon.png").write_bytes(favicon())
+    # Vercel: это статика, Python не запускать
+    (out / "vercel.json").write_text(VERCEL_JSON, encoding="utf-8")
     with zipfile.ZipFile(out / f"{app}.apk", "w", zipfile.ZIP_DEFLATED) as z:
         z.write(ROOT / "web" / app / "main.py", "assets/main.py")
         for f in FONTS + EXTRA.get(app, []):
