@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo no install",
+  "buildCommand": "if [ -d deploy ]; then echo \"static site: deploy/\"; else rm -rf /tmp/site && cp -r . /tmp/site && mv /tmp/site deploy && echo \"static site: $(pwd)\"; fi",
+  "outputDirectory": "deploy"
+}

@@ -56,3 +56,14 @@ for app, title in APPS.items():
     (out / "vercel.json").write_text(VERCEL_JSON, encoding="utf-8")
     size = sum(f.stat().st_size for f in out.iterdir()) // 1024
     print(app, "->", out.relative_to(ROOT), size, "KB")
+
+# копии с подчёркиванием (deploy/money_rain и т.п.) — на случай, если в Vercel Root Directory написан так
+for app in APPS:
+    src = DEPLOY / app
+    alias = DEPLOY / app.replace("-", "_")
+    if alias == src or not src.exists():
+        continue
+    if alias.exists():
+        shutil.rmtree(alias)
+    shutil.copytree(src, alias)
+    print(app, "->", alias.relative_to(ROOT))

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAPPY BIRTHDAY · Raph</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    @font-face {
+      font-family: "DejaVu Sans Mono";
+      src: url("DejaVuSansMono.ttf") format("truetype");
+      font-display: swap;
+    }
+    html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+    body { display: flex; align-items: center; justify-content: center; }
+    /* холст 1080x960, вписываем в окно с сохранением пропорций */
+    canvas { width: min(100vw, calc(100vh * 1080 / 960)); height: auto; aspect-ratio: 1080 / 960; display: block; cursor: pointer; }
+    .hint { position: fixed; bottom: 10px; right: 14px; color: #444; font: 12px "DejaVu Sans Mono", monospace; }
+    .back { position: fixed; top: 10px; left: 14px; color: #555; font: 12px "DejaVu Sans Mono", monospace; text-decoration: none; }
+    .back:hover { color: #ff7ab6; }
+  </style>
+</head>
+<body>
+  <canvas id="view" aria-label="HAPPY BIRTHDAY · Raph"></canvas>
+  <span class="hint">space / tap — pause · R — restart</span>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
